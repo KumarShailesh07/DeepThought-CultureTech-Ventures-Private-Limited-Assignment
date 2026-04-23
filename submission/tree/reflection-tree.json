@@ -1,0 +1,252 @@
+{
+  "meta": {
+    "name": "The Daily Reflection Tree",
+    "version": "1.0",
+    "axes": ["locus", "contribution", "radius"],
+    "description": "An end-of-day deterministic reflection tool walking through three psychological axes."
+  },
+  "nodes": [
+    {
+      "id": "START",
+      "type": "start",
+      "text": "Good evening. You made it through another day — that's worth something.\nThis won't take long. No right answers. Just honest ones.",
+      "next": "Q_OPEN"
+    },
+    {
+      "id": "Q_OPEN",
+      "type": "question",
+      "text": "Before we dig in — how did today feel, overall?",
+      "axis": null,
+      "options": [
+        { "label": "Energizing — I was in the zone",         "next": "A1_Q1_HIGH", "signal": null },
+        { "label": "Productive — got things done",           "next": "A1_Q1_HIGH", "signal": null },
+        { "label": "Draining — it wore me down",             "next": "A1_Q1_LOW",  "signal": null },
+        { "label": "Frustrating — things didn't go my way", "next": "A1_Q1_LOW",  "signal": null }
+      ]
+    },
+    {
+      "id": "A1_Q1_HIGH",
+      "type": "question",
+      "text": "You said today felt energizing or productive.\nWhen something went well, what do you think made it happen?",
+      "axis": "locus",
+      "options": [
+        { "label": "I prepared well for it",                       "next": "A1_Q2", "signal": "locus:internal" },
+        { "label": "I adapted when the plan changed",              "next": "A1_Q2", "signal": "locus:internal" },
+        { "label": "The right people showed up at the right time", "next": "A1_Q2", "signal": "locus:external" },
+        { "label": "Timing just worked out in my favour",          "next": "A1_Q2", "signal": "locus:external" }
+      ]
+    },
+    {
+      "id": "A1_Q1_LOW",
+      "type": "question",
+      "text": "You said today felt draining or frustrating.\nWhen things got hard, where did your attention go first?",
+      "axis": "locus",
+      "options": [
+        { "label": "What I could still control in the situation", "next": "A1_Q2", "signal": "locus:internal" },
+        { "label": "What went wrong and who was responsible",     "next": "A1_Q2", "signal": "locus:external" },
+        { "label": "What I'd do differently next time",           "next": "A1_Q2", "signal": "locus:internal" },
+        { "label": "How stuck I felt",                            "next": "A1_Q2", "signal": "locus:external" }
+      ]
+    },
+    {
+      "id": "A1_Q2",
+      "type": "question",
+      "text": "Was there a moment today where you made a call — even a small one — that changed how something went?",
+      "axis": "locus",
+      "options": [
+        { "label": "Yes, and I can name it",                         "next": "A1_DECISION", "signal": "locus:internal" },
+        { "label": "Maybe — but I'm not sure it mattered much",      "next": "A1_DECISION", "signal": "locus:internal" },
+        { "label": "Not really — the situation didn't give me room", "next": "A1_DECISION", "signal": "locus:external" },
+        { "label": "I don't think I had much say in how today went", "next": "A1_DECISION", "signal": "locus:external" }
+      ]
+    },
+    {
+      "id": "A1_DECISION",
+      "type": "decision",
+      "text": null,
+      "axis": "locus",
+      "routes": [
+        { "when": "internal", "then": "A1_REFLECT_INTERNAL" },
+        { "when": "external", "then": "A1_REFLECT_EXTERNAL" },
+        { "when": "tied",     "then": "A1_REFLECT_MIXED"    }
+      ]
+    },
+    {
+      "id": "A1_REFLECT_INTERNAL",
+      "type": "reflection",
+      "text": "You stayed in the driver's seat today — even when the road changed.\nThat's not luck. Noticing your own hand in how things go is a habit, and it's one worth keeping.",
+      "next": "BRIDGE_1_2"
+    },
+    {
+      "id": "A1_REFLECT_EXTERNAL",
+      "type": "reflection",
+      "text": "Today felt like it happened *to* you more than *with* you. That's worth sitting with —\nnot to assign blame, but to look for the small choices that were still yours.\nThere's almost always at least one.",
+      "next": "BRIDGE_1_2"
+    },
+    {
+      "id": "A1_REFLECT_MIXED",
+      "type": "reflection",
+      "text": "Today was a mix — some things you steered, some things steered you. That's honest.\nMost days are exactly that. The question is whether you noticed the moments you had a choice.",
+      "next": "BRIDGE_1_2"
+    },
+    {
+      "id": "BRIDGE_1_2",
+      "type": "bridge",
+      "text": "Now let's shift. Not *how* you handled things — but *what* you brought to the people around you today.",
+      "next": "A2_Q1"
+    },
+    {
+      "id": "A2_Q1",
+      "type": "question",
+      "text": "Think about one specific interaction today — a meeting, a message, a hallway moment.\nWhich of these fits best?",
+      "axis": "contribution",
+      "options": [
+        { "label": "I helped someone with something that wasn't my job",   "next": "A2_Q2", "signal": "contribution:giving"      },
+        { "label": "I did something extra without being asked",            "next": "A2_Q2", "signal": "contribution:giving"      },
+        { "label": "I felt my effort went unnoticed or unrewarded",        "next": "A2_Q2", "signal": "contribution:entitlement" },
+        { "label": "I was frustrated others weren't pulling their weight", "next": "A2_Q2", "signal": "contribution:entitlement" }
+      ]
+    },
+    {
+      "id": "A2_Q2",
+      "type": "question",
+      "text": "At the end of today, what thought comes most naturally to you?",
+      "axis": "contribution",
+      "options": [
+        { "label": "Did I move things forward for the people depending on me?", "next": "A2_DECISION", "signal": "contribution:giving"      },
+        { "label": "Did I get credit for what I contributed?",                  "next": "A2_DECISION", "signal": "contribution:entitlement" },
+        { "label": "Did I learn something that makes me more useful tomorrow?", "next": "A2_DECISION", "signal": "contribution:giving"      },
+        { "label": "Did I get what I needed to do my job well?",                "next": "A2_DECISION", "signal": "contribution:entitlement" }
+      ]
+    },
+    {
+      "id": "A2_DECISION",
+      "type": "decision",
+      "text": null,
+      "axis": "contribution",
+      "routes": [
+        { "when": "giving",      "then": "A2_REFLECT_GIVING"      },
+        { "when": "entitlement", "then": "A2_REFLECT_ENTITLEMENT" },
+        { "when": "tied",        "then": "A2_REFLECT_MIXED"       }
+      ]
+    },
+    {
+      "id": "A2_REFLECT_GIVING",
+      "type": "reflection",
+      "text": "You were thinking about what you gave today — not just what you got back.\nMost people keep a mental ledger without realising it. You weren't tallying. That's a rare posture.",
+      "next": "BRIDGE_2_3"
+    },
+    {
+      "id": "A2_REFLECT_ENTITLEMENT",
+      "type": "reflection",
+      "text": "Today you were tracking what you gave versus what came back — recognition, credit, effort from others.\nThat's human. But it's worth asking: what would it feel like to give without keeping score?",
+      "next": "BRIDGE_2_3"
+    },
+    {
+      "id": "A2_REFLECT_MIXED",
+      "type": "reflection",
+      "text": "Today was a push-pull — part of you was giving, part of you was watching to see if it was noticed.\nThat tension is normal. The fact that you're noticing it now is already something.",
+      "next": "BRIDGE_2_3"
+    },
+    {
+      "id": "BRIDGE_2_3",
+      "type": "bridge",
+      "text": "One last lens. Not what you did, not what you gave — but *who* was in your frame of view today.",
+      "next": "A3_Q1"
+    },
+    {
+      "id": "A3_Q1",
+      "type": "question",
+      "text": "When you picture today's biggest moment — good or bad — who else is in the frame?",
+      "axis": "radius",
+      "options": [
+        { "label": "Just me — it was mine to figure out",                                           "next": "A3_Q2", "signal": "radius:self"         },
+        { "label": "Me and one other person directly involved",                                     "next": "A3_Q2", "signal": "radius:narrow"       },
+        { "label": "My team — we were all in it together",                                         "next": "A3_Q2", "signal": "radius:wide"         },
+        { "label": "Someone I don't usually think about — a user, customer, or someone downstream", "next": "A3_Q2", "signal": "radius:transcendent" }
+      ]
+    },
+    {
+      "id": "A3_Q2",
+      "type": "question",
+      "text": "Did anyone today have it harder than you — and did you notice?",
+      "axis": "radius",
+      "options": [
+        { "label": "Yes, and I did something about it",            "next": "A3_DECISION", "signal": "radius:transcendent" },
+        { "label": "Yes, but I had my own things to deal with",   "next": "A3_DECISION", "signal": "radius:narrow"       },
+        { "label": "I was heads-down — I'm not sure I looked up", "next": "A3_DECISION", "signal": "radius:self"         },
+        { "label": "Not that I noticed",                           "next": "A3_DECISION", "signal": "radius:self"         }
+      ]
+    },
+    {
+      "id": "A3_DECISION",
+      "type": "decision",
+      "text": null,
+      "axis": "radius",
+      "routes": [
+        { "when": "transcendent", "then": "A3_REFLECT_TRANSCENDENT" },
+        { "when": "wide",         "then": "A3_REFLECT_WIDE"         },
+        { "when": "narrow",       "then": "A3_REFLECT_NARROW"       },
+        { "when": "self",         "then": "A3_REFLECT_SELF"         }
+      ]
+    },
+    {
+      "id": "A3_REFLECT_TRANSCENDENT",
+      "type": "reflection",
+      "text": "You looked up today. You saw someone else's world alongside yours — and you did something about it.\nThat's not a small thing. It's actually the whole thing.",
+      "next": "SUMMARY"
+    },
+    {
+      "id": "A3_REFLECT_WIDE",
+      "type": "reflection",
+      "text": "You were thinking in terms of 'we' today, not just 'I'. That's a wider frame than most people operate from.\nThe team was real to you — not just a backdrop.",
+      "next": "SUMMARY"
+    },
+    {
+      "id": "A3_REFLECT_NARROW",
+      "type": "reflection",
+      "text": "Today you were aware of others but pulled by your own current. That's honest —\nyou can only give what you have. The question is whether there's a little more in the tank than you think.",
+      "next": "SUMMARY"
+    },
+    {
+      "id": "A3_REFLECT_SELF",
+      "type": "reflection",
+      "text": "Today your world was close-in — your tasks, your stress, your goals. Sometimes that's necessary.\nBut widening the frame, even slightly, tends to make the weight feel different. Something to try tomorrow.",
+      "next": "SUMMARY"
+    },
+    {
+      "id": "SUMMARY",
+      "type": "summary",
+      "text": "Here's how today looked.",
+      "summary_reflections": {
+        "internal+giving+transcendent":      "You showed up fully today — owning your choices, giving without keeping score, and seeing beyond yourself. That's the full picture.",
+        "internal+giving+wide":              "You handled today well, gave generously, and kept the team in view. Strong day.",
+        "internal+giving+narrow":            "You steered well and gave genuinely — your circle of concern was a bit close, but the foundation is solid.",
+        "internal+giving+self":              "You handled today well and gave genuinely — but your frame stayed close-in. Tomorrow, look up once.",
+        "internal+entitlement+transcendent": "You were in control today and saw beyond yourself — but part of you was tracking the scoreboard. Worth noticing.",
+        "internal+entitlement+wide":         "You steered well today and thought about the team — but part of you was watching for credit. Worth noticing.",
+        "internal+entitlement+narrow":       "You were in control today but in a private way — focused on your outcomes and your credit. Agency is powerful. The question is what you point it at.",
+        "internal+entitlement+self":         "You were in control today but focused tightly — on your outcomes, your credit, your goals. The next step is pointing that energy outward.",
+        "external+giving+transcendent":      "Today felt like it pushed you around, but you gave anyway and thought about people beyond yourself. That's resilience with generosity. Not easy.",
+        "external+giving+wide":              "Today felt out of your hands, but you kept the team in view and gave what you could. That counts.",
+        "external+giving+narrow":            "You gave today even when you felt powerless. That counts. Tomorrow, look for one small choice that was actually yours.",
+        "external+giving+self":              "You gave today even when you felt powerless. That counts. Tomorrow, look for one small choice that was yours.",
+        "external+entitlement+transcendent": "Today had a push-pull quality — but you saw people beyond yourself. That wider view is the thing to hold onto.",
+        "external+entitlement+wide":         "Today felt out of your hands, and you were watching to see if you'd get what you deserved. The team was in your frame though — that's real.",
+        "external+entitlement+narrow":       "Today felt like it happened to you, and you were tallying closely. That's a tiring place to stand. See if tomorrow has one moment you can steer.",
+        "external+entitlement+self":         "Today felt like it happened to you, and you were watching for what you'd get. That's a tiring place to stand. See if tomorrow has one moment you can steer."
+      },
+      "closing_questions": {
+        "internal": "Where tomorrow will you have a choice that's easy to miss?",
+        "external":  "What's one thing tomorrow that's actually within your control — even if it feels small?"
+      },
+      "next": "END"
+    },
+    {
+      "id": "END",
+      "type": "end",
+      "text": "That's it for tonight. See you tomorrow.",
+      "next": null
+    }
+  ]
+}
